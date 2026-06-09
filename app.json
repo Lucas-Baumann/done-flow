@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "my-app",
-    "slug": "my-app",
+    "name": "Done Flow",
+    "slug": "Done Flow",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/DoneFlow.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/DoneFlow.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#5fa9cf"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,12 +23,19 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/images/DoneFlow.png",
+        "backgroundColor": "#5fa9cf"
+      },
+      "package": "com.anonymous.myapp"
     },
     "web": {
-      "favicon": "./assets/images/favicon.png"
-    }
+      "favicon": "./assets/images/DoneFlow.png"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-asset",
+      "expo-web-browser",
+      "expo-sqlite"
+    ]
   }
 }
