@@ -43,7 +43,7 @@ export async function getTask(): Promise<Task[]> {
     "SELECT * FROM tarefas WHERE deletedTask IS NULL",
   );
   const categories = await dbcategories.getAllAsync<any>(
-    "SELECT * FROM categorias",
+    "SELECT * FROM categorias WHERE deleteDate IS NULL",
   );
   const categoryMap = new Map(categories.map((c) => [c.id, c.text]));
   const colorMap = new Map(categories.map(c => [c.id, c.color]));
@@ -157,6 +157,10 @@ export function deleteCategories(id: number) {
   dbcategories.runSync(
     "UPDATE categorias SET deleteDate = ? WHERE id = ?",
     new Date().toISOString(),
+    id,
+  );
+  dbtasks.runSync(
+    "UPDATE tarefas SET idcategory = NULL WHERE idcategory = ?",
     id,
   );
 }
