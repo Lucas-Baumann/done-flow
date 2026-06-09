@@ -95,9 +95,16 @@ function ItemComponent({
                 />
               </Pressable>
             </View>
-            <View style={styles.category}>
-              <Text style={styles.categoryText}>{item.categoryName}</Text>
-            </View>
+            {item.categoryName && (
+              <View
+                style={[
+                  styles.category,
+                  { backgroundColor: item.categoryColor ?? "#cccccc" },
+                ]}
+              >
+                <Text style={styles.categoryText}>{item.categoryName}</Text>
+              </View>
+            )}
           </View>
         </View>
       </View>

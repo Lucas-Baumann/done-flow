@@ -10,11 +10,13 @@ export type Task = {
   restoreDate: string | null;
   idcategory: number | null;
   categoryName: string | null;
+  categoryColor: string | null;
 };
 
 const dbtasks = SQLite.openDatabaseSync("tasks.db");
 export async function creatTableTarefas() {
   await dbtasks.execAsync(`
+        PRAGMA journal_mode = WAL;
         CREATE TABLE IF NOT EXISTS tarefas (
         id INTEGER PRIMARY KEY NOT NULL,
         text TEXT NOT NULL,
@@ -31,10 +33,8 @@ export async function creatTableTarefas() {
 
 export async function addTask(text: string, Value: number | null) {
   await dbtasks.runAsync(
-    "INSERT INTO tarefas (text, addDate,idcategory) VALUES (?,?,?)",
-    text,
-    new Date().toISOString(),
-    Value,
+    "INSERT INTO tarefas (text, addDate, idcategory) VALUES (?,?,?)",
+    [text, new Date().toISOString(), Value],
   );
 }
 
@@ -46,10 +46,12 @@ export async function getTask(): Promise<Task[]> {
     "SELECT * FROM categorias",
   );
   const categoryMap = new Map(categories.map((c) => [c.id, c.text]));
+  const colorMap = new Map(categories.map(c => [c.id, c.color]));
 
   return tasks.map((task) => ({
     ...task,
     completed: task.completed === 1,
+    categoryColor: task.idcategory ? colorMap.get(task.idcategory) ?? null : null,
     categoryName: task.idcategory
       ? (categoryMap.get(task.idcategory) ?? null)
       : null,
@@ -110,18 +112,21 @@ export type Categories = {
   addDate: string;
   editDate: string | null;
   deletedTask: string | null;
+  color: string | null;
 };
 
 const dbcategories = SQLite.openDatabaseSync("categories.db");
 
 export async function createTableCategorias() {
   await dbcategories.execAsync(`
+        PRAGMA journal_mode = WAL;
         CREATE TABLE IF NOT EXISTS categorias (
         id INTEGER PRIMARY KEY NOT NULL,
         text TEXT NOT NULL,
         addDate TEXT NOT NULL,
         editDate TEXT NULL,
-        deleteDate TEXT NULL);
+        deleteDate TEXT NULL,
+        color TEXT NULL);
     `);
 }
 
@@ -131,19 +136,19 @@ export async function getCategories(): Promise<Categories[]> {
   );
 }
 
-export async function addCategories(text: string) {
+export async function addCategories(text: string, color: string) {
   await dbcategories.runAsync(
-    "INSERT INTO categorias (text, addDate) VALUES (?,?)",
-    text,
-    new Date().toISOString(),
+    "INSERT INTO categorias (text, addDate, color) VALUES (?,?,?)",
+    [text, new Date().toISOString(), color],
   );
 }
 
-export function editCategories(id: number, text: string) {
+export function editCategories(id: number, text: string, color: string) {
   dbcategories.runSync(
-    "UPDATE categorias SET text = ?, editDate = ? WHERE id = ?",
+    "UPDATE categorias SET text = ?, editDate = ?, color = ? WHERE id = ?",
     text,
     new Date().toISOString(),
+    color,
     id,
   );
 }
@@ -157,5 +162,10 @@ export function deleteCategories(id: number) {
 }
 
 export async function initDatabase() {
-    await Promise.all([creatTableTarefas(), createTableCategorias()])
+    await creatTableTarefas();
+    try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN restoreDate TEXT NULL'); } catch (_) {}
+    try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN deletedTask TEXT NULL'); } catch (_) {}
+    try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN idcategory INTEGER NULL'); } catch (_) {}
+    await createTableCategorias();
+    try { await dbcategories.execAsync('ALTER TABLE categorias ADD COLUMN color TEXT NULL'); } catch (_) {}
 }

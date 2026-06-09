@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text } from "../../components/Themed";
 import { styles } from "./style";
 import {
@@ -19,6 +19,8 @@ import {
   deleteCategories as deleteCategoriesDB,
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
+
+const PRESET_COLORS = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#1abc9c', '#e91e63'];
 
 type ItemComponentProps = {
   item: Categories;
@@ -72,6 +74,10 @@ export default function ConfigTab() {
   const [items, setItems] = useState<Categories[]>([]);
   const [text, setText] = useState("");
   const [textedit, setTextEdit] = useState("");
+  const [selectedColor, setSelectedColor] = useState('#3498db');
+  const [selectedEditColor, setSelectedEditColor] = useState('#3498db');
+  const [colorPickerVisible, setColorPickerVisible] = useState(false);
+  const [colorEditPickerVisible, setColorEditPickerVisible] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -90,14 +96,18 @@ export default function ConfigTab() {
   );
   const modalVisible = useMemo(() => selectedItem != null, [selectedItem]);
 
+  useEffect(() => {
+    if (selectedItem) setSelectedEditColor(selectedItem.color ?? '#3498db');
+  }, [selectedItem]);
+
   async function addCategories() {
     if (text !== "") {
-      await addCategoriesDB(text);
+      await addCategoriesDB(text, selectedColor);
       const categories = await getCategories();
       setItems(categories);
       setText("");
     } else {
-      Alert.alert("Digite uma tarefa");
+      Alert.alert("Digite uma categoria");
     }
   }
 
@@ -109,12 +119,12 @@ export default function ConfigTab() {
 
   const editCategories = useCallback(
     async (id: number, text: string) => {
-      await editCategoriesDB(id, text);
+      await editCategoriesDB(id, text, selectedEditColor);
       const Tasks = await getCategories();
       setItems(Tasks);
       setTextEdit("");
     },
-    [textedit],
+    [textedit, selectedEditColor],
   );
 
   return (
@@ -129,7 +139,26 @@ export default function ConfigTab() {
             placeholder="Nome da categoria..."
           />
         </View>
-
+          <Pressable
+            style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: selectedColor, borderWidth: 1, borderColor: '#ccc' }}
+            onPress={() => setColorPickerVisible(!colorPickerVisible)}
+          />
+          {colorPickerVisible && (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8, backgroundColor: '#fff', borderRadius: 8, position: 'absolute', top: 50, zIndex: 10 }}>
+              {PRESET_COLORS.map(c => (
+                <Pressable
+                  key={c}
+                  style={{
+                    width: 30, height: 30, borderRadius: 15,
+                    backgroundColor: c,
+                    borderWidth: selectedColor === c ? 3 : 0,
+                    borderColor: '#000',
+                  }}
+                  onPress={() => { setSelectedColor(c); setColorPickerVisible(false); }}
+                />
+              ))}
+            </View>
+          )}
         <Pressable style={styles.AddButton} onPress={addCategories}>
           <Ionicons
             name="add"
@@ -171,6 +200,26 @@ export default function ConfigTab() {
                   onChangeText={setTextEdit}
                   placeholder="Nome da categoria..."
                 />
+                <Pressable
+                  style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: selectedEditColor, borderWidth: 1, borderColor: '#ccc', marginVertical: 8 }}
+                  onPress={() => setColorEditPickerVisible(!colorEditPickerVisible)}
+                />
+                {colorEditPickerVisible && (
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
+                    {PRESET_COLORS.map(c => (
+                      <Pressable
+                        key={c}
+                        style={{
+                          width: 30, height: 30, borderRadius: 15,
+                          backgroundColor: c,
+                          borderWidth: selectedEditColor === c ? 3 : 0,
+                          borderColor: '#000',
+                        }}
+                        onPress={() => { setSelectedEditColor(c); setColorEditPickerVisible(false); }}
+                      />
+                    ))}
+                  </View>
+                )}
                 <View style={styles.ModalButtonContainer}>
                   <Pressable
                     style={styles.AddButton}
