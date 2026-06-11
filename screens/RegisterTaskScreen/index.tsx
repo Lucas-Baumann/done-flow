@@ -25,6 +25,8 @@ import {
   getCategories,
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
+import ScreenTemplate from "../TemplateScreen";
+import { sharedStyles } from "../../styles/shared";
 
 type ItemComponentProps = {
   item: Task;
@@ -188,120 +190,139 @@ export default function TabTwoScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Adicione sua tarefa</Text>
-      <View lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <View style={styles.addContainer}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.TextInput}
-            value={text}
-            onChangeText={setText}
-            placeholder="Nome da tarefa..."
-          />
-
-          <Dropdown
-            style={styles.dropdown}
-            data={data}
-            onChange={(item) => {
-              setValue(item.id);
-            }}
-            search
-            placeholder="Selecione a categoria"
-            searchPlaceholder="Buscar"
-            labelField="text"
-            valueField="id"
-            value={Value}
-            renderRightIcon={() => (
-              <Ionicons color="black" name="caret-down" size={20} />
-            )}
-          ></Dropdown>
-        </View>
-
-        <Pressable style={styles.AddButton} onPress={addTask}>
-          <Ionicons
-            name="add"
-            size={60}
-            color="#ffffff"
-            style={{ alignSelf: "center" }}
-          />
-        </Pressable>
-      </View>
-
-      <FlatList
-        style={styles.Flatlist}
-        contentContainerStyle={{ gap: 6 }}
-        data={filteredItems}
-        extraData={items}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <ItemComponent
-            item={item}
-            deleteTask={deleteTask}
-            completeTask={completeTask}
-            setSelectedItemId={setSelectedItemId}
-          />
-        )}
-      />
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setSelectedItemId(undefined)}
-      >
-        <SafeAreaView style={{ flex: 1 }}>
-          <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-            <View style={styles.ModalView}>
-              <View style={styles.Modal}>
+    <ScreenTemplate
+      title={"Cadastro"}
+      tabs={[
+        {
+          label: "Tarefas",
+          content: (
+            <View style={{flex: 1,}}>
+              <Text style={styles.TextTabs}>Adicione sua tarefa</Text>
+              <View style={styles.addContainer}>
                 <View style={styles.inputContainer}>
-                  <Text style={styles.Text}> Edite sua tarefa</Text>
                   <TextInput
                     style={styles.TextInput}
-                    value={textedit}
-                    onChangeText={setTextEdit}
+                    value={text}
+                    onChangeText={setText}
                     placeholder="Nome da tarefa..."
                   />
+
                   <Dropdown
                     style={styles.dropdown}
                     data={data}
                     onChange={(item) => {
-                      setValueEdit(item.id);
+                      setValue(item.id);
                     }}
                     search
                     placeholder="Selecione a categoria"
                     searchPlaceholder="Buscar"
                     labelField="text"
                     valueField="id"
-                    value={ValueEdit}
+                    value={Value}
                     renderRightIcon={() => (
                       <Ionicons color="black" name="caret-down" size={20} />
                     )}
                   ></Dropdown>
                 </View>
-                <View style={styles.ModalButtonContainer}>
-                  <Pressable
-                    style={styles.modaladdButton}
-                    onPress={() => {
-                      editTask(selectedItem.id, textedit, ValueEdit);
-                      setSelectedItemId(undefined);
-                    }}
-                  >
-                    <Text style={styles.TextButton}> Editar </Text>
-                  </Pressable>
 
-                  <Pressable
-                    style={styles.CancelButton}
-                    onPress={() => setSelectedItemId(undefined)}
-                  >
-                    <Text style={styles.TextButton}> Cancelar </Text>
-                  </Pressable>
-                </View>
+                <Pressable style={styles.AddButton} onPress={addTask}>
+                  <Ionicons
+                    name="add"
+                    size={60}
+                    color="#ffffff"
+                    style={{ alignSelf: "center" }}
+                  />
+                </Pressable>
               </View>
+
+              <FlatList
+                style={styles.Flatlist}
+                contentContainerStyle={{ gap: 6 }}
+                data={filteredItems}
+                extraData={items}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <ItemComponent
+                    item={item}
+                    deleteTask={deleteTask}
+                    completeTask={completeTask}
+                    setSelectedItemId={setSelectedItemId}
+                  />
+                )}
+              />
+
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setSelectedItemId(undefined)}
+              >
+                <SafeAreaView style={{ flex: 1 }}>
+                  <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+                    <View style={styles.ModalView}>
+                      <View style={styles.Modal}>
+                        <View style={styles.inputContainer}>
+                          <Text style={styles.Text}> Edite sua tarefa</Text>
+                          <TextInput
+                            style={styles.TextInput}
+                            value={textedit}
+                            onChangeText={setTextEdit}
+                            placeholder="Nome da tarefa..."
+                          />
+                          <Dropdown
+                            style={styles.dropdown}
+                            data={data}
+                            onChange={(item) => {
+                              setValueEdit(item.id);
+                            }}
+                            search
+                            placeholder="Selecione a categoria"
+                            searchPlaceholder="Buscar"
+                            labelField="text"
+                            valueField="id"
+                            value={ValueEdit}
+                            renderRightIcon={() => (
+                              <Ionicons
+                                color="black"
+                                name="caret-down"
+                                size={20}
+                              />
+                            )}
+                          ></Dropdown>
+                        </View>
+                        <View style={styles.ModalButtonContainer}>
+                          <Pressable
+                            style={styles.modaladdButton}
+                            onPress={() => {
+                              editTask(selectedItem.id, textedit, ValueEdit);
+                              setSelectedItemId(undefined);
+                            }}
+                          >
+                            <Text style={styles.TextButton}> Editar </Text>
+                          </Pressable>
+
+                          <Pressable
+                            style={styles.CancelButton}
+                            onPress={() => setSelectedItemId(undefined)}
+                          >
+                            <Text style={styles.TextButton}> Cancelar </Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  </KeyboardAvoidingView>
+                </SafeAreaView>
+              </Modal>
             </View>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
-      </Modal>
-    </View>
+          ),
+        },
+        // {
+        //   label: "Historico",
+        //   content: (
+
+        //   ),
+        // }
+      ]}
+    />
   );
 }
