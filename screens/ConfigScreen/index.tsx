@@ -16,6 +16,10 @@ import {
   Categories,
   editCategories as editCategoriesDB,
   deleteCategories as deleteCategoriesDB,
+  getDeleteCategory,
+  permanentDeleteCategory,
+  restoreCategory as restoreCategoryDB,
+  initDatabase,
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenTemplate from "../TemplateScreen";
@@ -38,54 +42,111 @@ type ItemComponentProps = {
   setSelectedItemId: React.Dispatch<React.SetStateAction<number | undefined>>;
 };
 
+type ItemDeleteComponentProps = {
+  item: Categories;
+  permanentDeleteCategory: (id: number) => void;
+  restoreCategory: (id: number) => void;
+};
+
 function ItemComponent({
   item,
   deleteCategories,
   setSelectedItemId,
 }: ItemComponentProps) {
   return (
-      <View style={styles.FlatListContainer}>
-        <View style={styles.FlatListRowContainer}>
-          <View style={styles.FlatListTextContainer}>
-            <Text style={styles.TextFlatList}>{item.text}</Text>
-          </View>
-          <View style={styles.FlatListButtonContainer}>
-            <Pressable
-              style={styles.DeleteButton}
-              onPress={() => deleteCategories(item.id)}
-            >
-              <Ionicons
-                name="trash-outline"
-                size={18}
-                color="#ffffff"
-                style={{ alignSelf: "center" }}
-              />
-            </Pressable>
-            <Pressable
-              style={styles.EditButton}
-              onPress={() => setSelectedItemId(item.id)}
-            >
-              <Ionicons
-                name="create-outline"
-                size={18}
-                color="#ffffff"
-                style={{ alignSelf: "center" }}
-              />
-            </Pressable>
+    <View style={styles.FlatListContainer}>
+      <View style={styles.FlatListRowContainer}>
+        <View style={styles.FlatListTextContainer}>
+          <Text style={styles.TextFlatList}>{item.text}</Text>
+        </View>
+        <View style={styles.FlatListButtonContainer}>
+          <Pressable
+            style={styles.DeleteButton}
+            onPress={() => deleteCategories(item.id)}
+          >
+            <Ionicons
+              name="trash-outline"
+              size={18}
+              color="#ffffff"
+              style={{ alignSelf: "center" }}
+            />
+          </Pressable>
+          <Pressable
+            style={styles.EditButton}
+            onPress={() => setSelectedItemId(item.id)}
+          >
+            <Ionicons
+              name="create-outline"
+              size={18}
+              color="#ffffff"
+              style={{ alignSelf: "center" }}
+            />
+          </Pressable>
 
-            <View
-              style={{
-                backgroundColor: item.color ?? "#ccc",
-                width: 40,
-                height: 40,
-                borderRadius: 10,
-              }}
-            >
-              {" "}
-            </View>
+          <View
+            style={{
+              backgroundColor: item.color ?? "#ccc",
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+            }}
+          >
+            {" "}
           </View>
         </View>
       </View>
+    </View>
+  );
+}
+
+function ItemDeleteComponent({
+  item,
+  permanentDeleteCategory,
+  restoreCategory,
+}: ItemDeleteComponentProps) {
+  return (
+    <View style={styles.FlatListContainer}>
+      <View style={styles.FlatListRowContainer}>
+        <View style={styles.FlatListTextContainer}>
+          <Text style={styles.TextFlatList}>{item.text}</Text>
+        </View>
+        <View style={styles.FlatListButtonContainer}>
+          <Pressable
+            style={styles.DeleteButton}
+            onPress={() => permanentDeleteCategory(item.id)}
+          >
+            <Ionicons
+              name="ban"
+              size={18}
+              color="#ffffff"
+              style={{ alignSelf: "center" }}
+            />
+          </Pressable>
+          <Pressable
+            style={styles.EditButton}
+            onPress={() => restoreCategory(item.id)}
+          >
+            <Ionicons
+              name="refresh"
+              size={18}
+              color="#ffffff"
+              style={{ alignSelf: "center" }}
+            />
+          </Pressable>
+
+          <View
+            style={{
+              backgroundColor: item.color ?? "#ccc",
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+            }}
+          >
+            {" "}
+          </View>
+        </View>
+      </View>
+    </View>
   );
 }
 
@@ -97,10 +158,17 @@ export default function ConfigTab() {
   const [selectedEditColor, setSelectedEditColor] = useState("#3498db");
   const [colorPickerVisible, setColorPickerVisible] = useState(false);
   const [colorEditPickerVisible, setColorEditPickerVisible] = useState(false);
+  const [deleteItem, setDeleteItem] = useState<Categories[]>([]);
 
   useFocusEffect(
     useCallback(() => {
-      getCategories().then((tasks) => setItems(tasks));
+      initDatabase().then(() => getCategories().then((tasks) => setItems(tasks)));
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      getDeleteCategory().then((tasks) => setDeleteItem(tasks));
     }, []),
   );
 
@@ -134,6 +202,8 @@ export default function ConfigTab() {
     await deleteCategoriesDB(id);
     const categories = await getCategories();
     setItems(categories);
+    const deleteCategories = await getDeleteCategory();
+    setDeleteItem(deleteCategories);
   }, []);
 
   const editCategories = useCallback(
@@ -145,6 +215,20 @@ export default function ConfigTab() {
     },
     [textedit, selectedEditColor],
   );
+
+  const permanentDelete = useCallback(async (id: number) => {
+    await permanentDeleteCategory(id);
+    const Category = await getDeleteCategory();
+    setDeleteItem(Category);
+  }, []);
+
+  const restoreCategory = useCallback(async (id: number) => {
+    restoreCategoryDB(id);
+    const Category = await getDeleteCategory();
+    setDeleteItem(Category);
+    const Task = await getCategories();
+    setItems(Task);
+  }, []);
 
   return (
     <ScreenTemplate
@@ -324,19 +408,21 @@ export default function ConfigTab() {
           label: "Historico",
           content: (
             <View>
-              <Text style={styles.TextTabs}>Historico de categorias deletadas</Text>
+              <Text style={styles.TextTabs}>
+                Historico de categorias deletadas
+              </Text>
 
               <FlatList
                 style={styles.Flatlist}
                 contentContainerStyle={{ gap: 6 }}
-                data={items}
-                extraData={items}
+                data={deleteItem}
+                extraData={deleteItem}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                  <ItemComponent
+                  <ItemDeleteComponent
                     item={item}
-                    deleteCategories={deleteCategories}
-                    setSelectedItemId={setSelectedItemId}
+                    permanentDeleteCategory={permanentDelete}
+                    restoreCategory={restoreCategory}
                   />
                 )}
               />

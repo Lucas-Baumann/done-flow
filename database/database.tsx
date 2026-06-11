@@ -111,7 +111,7 @@ export type Categories = {
   id: number;
   addDate: string;
   editDate: string | null;
-  deletedTask: string | null;
+  deleteTDate: string | null;
   color: string | null;
 };
 
@@ -126,6 +126,7 @@ export async function createTableCategorias() {
         addDate TEXT NOT NULL,
         editDate TEXT NULL,
         deleteDate TEXT NULL,
+        restoreDate TEXT NULL,
         color TEXT NULL);
     `);
 }
@@ -165,6 +166,24 @@ export function deleteCategories(id: number) {
   );
 }
 
+export async function getDeleteCategory(): Promise<Categories[]> {
+  return await dbcategories.getAllAsync<any>(
+    "SELECT * FROM categorias WHERE deleteDate IS NOT NULL",
+  );
+}
+
+export function restoreCategory(id: number) {
+  dbcategories.runSync(
+    "UPDATE categorias SET deleteDate = NULL, restoreDate = ? WHERE id = ?",
+    new Date().toISOString(),
+    id,
+  );
+}
+
+export function permanentDeleteCategory(id: number) {
+  dbcategories.runSync("DELETE FROM categorias WHERE id = ?", id);
+}
+
 export async function initDatabase() {
     await creatTableTarefas();
     try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN restoreDate TEXT NULL'); } catch (_) {}
@@ -172,4 +191,5 @@ export async function initDatabase() {
     try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN idcategory INTEGER NULL'); } catch (_) {}
     await createTableCategorias();
     try { await dbcategories.execAsync('ALTER TABLE categorias ADD COLUMN color TEXT NULL'); } catch (_) {}
+    try { await dbcategories.execAsync('ALTER TABLE categorias ADD COLUMN restoreDate TEXT NULL'); } catch (_) {}
 }

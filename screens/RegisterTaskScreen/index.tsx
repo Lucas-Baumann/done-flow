@@ -196,7 +196,7 @@ export default function TabTwoScreen() {
         {
           label: "Tarefas",
           content: (
-            <View style={{flex: 1,}}>
+            <View>
               <Text style={styles.TextTabs}>Adicione sua tarefa</Text>
               <View style={styles.addContainer}>
                 <View style={styles.inputContainer}>

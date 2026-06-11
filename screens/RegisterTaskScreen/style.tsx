@@ -43,6 +43,13 @@ const localStyles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  addContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#87caeb',
+    columnGap: 8,
+  },
+
   category: {
     backgroundColor: '#00d9ff',
     borderRadius: 10,
