@@ -1,15 +1,10 @@
 import { Button, FlatList, Modal, StyleSheet, TextInput } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#87caeb',
-  },
-
   addContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#87caeb',
     columnGap: 8,
   },
@@ -17,12 +12,6 @@ export const styles = StyleSheet.create({
   inputContainer: {
     gap:4,
     backgroundColor: '#87caeb',
-  },
-
-  title: {
-    padding: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
   },
 
   TextInput: {
@@ -107,9 +96,11 @@ export const styles = StyleSheet.create({
   },
 
   Flatlist: {
-    width: 500,
-    height: 60,
+    width: '100%',
+    height: '100%',
+    padding: 20,
     borderRadius: 10,
+    backgroundColor: "#87caeb"
   },
 
   FlatListRowContainer: {
@@ -121,7 +112,7 @@ export const styles = StyleSheet.create({
   },
 
   FlatListTextContainer:{
-    width: 350,
+    flex: 1,
   },
 
   FlatListButtonContainer: {

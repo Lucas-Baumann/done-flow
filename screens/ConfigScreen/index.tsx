@@ -128,121 +128,123 @@ export default function ConfigTab() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}> Configuração de categorias</Text>
-      <View style={styles.addContainer}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.TextInput}
-            value={text}
-            onChangeText={setText}
-            placeholder="Nome da categoria..."
-          />
-        </View>
-          <Pressable
-            style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: selectedColor, borderWidth: 1, borderColor: '#ccc' }}
-            onPress={() => setColorPickerVisible(!colorPickerVisible)}
-          />
-          {colorPickerVisible && (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8, backgroundColor: '#fff', borderRadius: 8, position: 'absolute', top: 50, zIndex: 10 }}>
-              {PRESET_COLORS.map(c => (
+    <ScreenTemplate
+      title="Configuração"
+      tabs={[
+        {
+          label: "Categorias",
+          content: (
+            <View >
+              <View style={styles.addContainer}>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.TextInput}
+                    value={text}
+                    onChangeText={setText}
+                    placeholder="Nome da categoria..."
+                  />
+                </View>
                 <Pressable
-                  key={c}
-                  style={{
-                    width: 30, height: 30, borderRadius: 15,
-                    backgroundColor: c,
-                    borderWidth: selectedColor === c ? 3 : 0,
-                    borderColor: '#000',
-                  }}
-                  onPress={() => { setSelectedColor(c); setColorPickerVisible(false); }}
+                  style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: selectedColor, borderWidth: 1, borderColor: '#ccc' }}
+                  onPress={() => setColorPickerVisible(!colorPickerVisible)}
                 />
-              ))}
-            </View>
-          )}
-        <Pressable style={styles.AddButton} onPress={addCategories}>
-          <Ionicons
-            name="add"
-            size={60}
-            color="#ffffff"
-            style={{ alignSelf: "center" }}
-          />
-        </Pressable>
-      </View>
-
-      <FlatList
-        style={styles.Flatlist}
-        contentContainerStyle={{ gap: 6 }}
-        data={items}
-        extraData={items}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <ItemComponent
-            item={item}
-            deleteCategories={deleteCategories}
-            setSelectedItemId={setSelectedItemId}
-          />
-        )}
-      />
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setSelectedItemId(undefined)}
-      >
-        <SafeAreaView style={{ flex: 1 }}>
-          <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-            <View style={styles.ModalView}>
-              <View style={styles.Modal}>
-                <Text style={styles.Text}> Edite sua categoria</Text>
-                <TextInput
-                  style={styles.TextInput}
-                  value={textedit}
-                  onChangeText={setTextEdit}
-                  placeholder="Nome da categoria..."
-                />
-                <Pressable
-                  style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: selectedEditColor, borderWidth: 1, borderColor: '#ccc', marginVertical: 8 }}
-                  onPress={() => setColorEditPickerVisible(!colorEditPickerVisible)}
-                />
-                {colorEditPickerVisible && (
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
+                {colorPickerVisible && (
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8, backgroundColor: '#fff', borderRadius: 8, position: 'absolute', top: 50, zIndex: 10 }}>
                     {PRESET_COLORS.map(c => (
                       <Pressable
                         key={c}
-                        style={{
-                          width: 30, height: 30, borderRadius: 15,
-                          backgroundColor: c,
-                          borderWidth: selectedEditColor === c ? 3 : 0,
-                          borderColor: '#000',
-                        }}
-                        onPress={() => { setSelectedEditColor(c); setColorEditPickerVisible(false); }}
+                        style={{ width: 30, height: 30, borderRadius: 15, backgroundColor: c, borderWidth: selectedColor === c ? 3 : 0, borderColor: '#000' }}
+                        onPress={() => { setSelectedColor(c); setColorPickerVisible(false); }}
                       />
                     ))}
                   </View>
                 )}
-                <View style={styles.ModalButtonContainer}>
-                  <Pressable
-                    style={styles.AddButton}
-                    onPress={() => {
-                      editCategories(selectedItem.id, textedit);
-                      setSelectedItemId(undefined);
-                    }}
-                  >
-                    <Text style={styles.TextButton}> Editar </Text>
-                  </Pressable>
-
-                  <Pressable
-                    style={styles.CancelButton}
-                    onPress={() => setSelectedItemId(undefined)}
-                  >
-                    <Text style={styles.TextButton}> Cancelar </Text>
-                  </Pressable>
-                </View>
+                <Pressable style={styles.AddButton} onPress={addCategories}>
+                  <Ionicons name="add" size={60} color="#ffffff" style={{ alignSelf: "center" }} />
+                </Pressable>
               </View>
+
+              <FlatList
+                style={styles.Flatlist}
+                contentContainerStyle={{ gap: 6 }}
+                data={items}
+                extraData={items}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <ItemComponent
+                    item={item}
+                    deleteCategories={deleteCategories}
+                    setSelectedItemId={setSelectedItemId}
+                  />
+                )}
+              />
+
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setSelectedItemId(undefined)}
+              >
+                <SafeAreaView style={{ flex: 1 }}>
+                  <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+                    <View style={styles.ModalView}>
+                      <View style={styles.Modal}>
+                        <Text style={styles.Text}> Edite sua categoria</Text>
+                        <TextInput
+                          style={styles.TextInput}
+                          value={textedit}
+                          onChangeText={setTextEdit}
+                          placeholder="Nome da categoria..."
+                        />
+                        <Pressable
+                          style={{ width: 40, height: 40, borderRadius: 8, backgroundColor: selectedEditColor, borderWidth: 1, borderColor: '#ccc', marginVertical: 8 }}
+                          onPress={() => setColorEditPickerVisible(!colorEditPickerVisible)}
+                        />
+                        {colorEditPickerVisible && (
+                          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, padding: 8, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
+                            {PRESET_COLORS.map(c => (
+                              <Pressable
+                                key={c}
+                                style={{ width: 30, height: 30, borderRadius: 15, backgroundColor: c, borderWidth: selectedEditColor === c ? 3 : 0, borderColor: '#000' }}
+                                onPress={() => { setSelectedEditColor(c); setColorEditPickerVisible(false); }}
+                              />
+                            ))}
+                          </View>
+                        )}
+                        <View style={styles.ModalButtonContainer}>
+                          <Pressable
+                            style={styles.AddButton}
+                            onPress={() => {
+                              if (selectedItem) editCategories(selectedItem.id, textedit);
+                              setSelectedItemId(undefined);
+                            }}
+                          >
+                            <Text style={styles.TextButton}> Editar </Text>
+                          </Pressable>
+                          <Pressable
+                            style={styles.CancelButton}
+                            onPress={() => setSelectedItemId(undefined)}
+                          >
+                            <Text style={styles.TextButton}> Cancelar </Text>
+                          </Pressable>
+                        </View>
+                      </View>
+                    </View>
+                  </KeyboardAvoidingView>
+                </SafeAreaView>
+              </Modal>
             </View>
-          </KeyboardAvoidingView>
-        </SafeAreaView>
-      </Modal>
-    </View>
+          ),
+        },
+        {
+          label: "Historico",
+          content: (
+            <View>
+              <Text>Historico de categorias deletadas</Text>
+            </View>
+          ),
+        },
+      ]}
+    />
   );
 }
