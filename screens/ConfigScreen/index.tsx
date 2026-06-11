@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text } from "../../components/Themed";
-import { styles } from "./style";
 import {
   Alert,
   FlatList,
@@ -19,6 +18,9 @@ import {
   deleteCategories as deleteCategoriesDB,
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
+import ScreenTemplate from "../TemplateScreen";
+import { styles } from "./style";
+
 
 const PRESET_COLORS = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6', '#1abc9c', '#e91e63'];
 
@@ -63,6 +65,8 @@ function ItemComponent({
                 style={{ alignSelf: "center" }}
               />
             </Pressable>
+
+            <View style={{backgroundColor: item.color ?? '#ccc', width: 40, height: 40}}> </View>
           </View>
         </View>
       </View>
