@@ -266,7 +266,6 @@ export default function TabTwoScreen() {
 
   return (
     <ScreenTemplate
-      title={"Cadastro"}
       tabs={[
         {
           label: "Tarefas",

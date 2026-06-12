@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, TextInput } from "react-native";
+import { Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text } from "../../components/Themed";
 
@@ -9,7 +9,6 @@ type Tab = {
 };
 
 type Props = {
-  title: string;
   tabs: Tab[];
 };
 

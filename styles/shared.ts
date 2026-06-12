@@ -125,10 +125,6 @@ export const sharedStyles = StyleSheet.create({
     borderRadius: 15,
   },
 
-  dropdownPlaceholder: {
-    alignContent: "center",
-  },
-
   TextTabs: {
     textAlign: "center",
     color: "#000000",
