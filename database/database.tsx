@@ -160,10 +160,6 @@ export function deleteCategories(id: number) {
     new Date().toISOString(),
     id,
   );
-  dbtasks.runSync(
-    "UPDATE tarefas SET idcategory = NULL WHERE idcategory = ?",
-    id,
-  );
 }
 
 export async function getDeleteCategory(): Promise<Categories[]> {

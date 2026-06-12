@@ -13,7 +13,7 @@ type Props = {
   tabs: Tab[];
 };
 
-export default function ScreenTemplate({ title, tabs }: Props) {
+export default function ScreenTemplate({ tabs }: Props) {
   const [activeTab, setActiveTab] = useState(0);
 
   return (
@@ -40,12 +40,11 @@ export default function ScreenTemplate({ title, tabs }: Props) {
                       activeTab === index ? "#3e54cf" : "#3e54cf",
                   }}
                 >
-                  <Text style={{ color: "#fff" }}>{tab.label}</Text>
+                  <Text style={{ color: "#fff", }}>{tab.label}</Text>
                 </Pressable>
               ))}
             </View>
         )}
-
         <View style={{ flex: 1, backgroundColor: "#87caeb" }}>
           {tabs[activeTab].content}
         </View>

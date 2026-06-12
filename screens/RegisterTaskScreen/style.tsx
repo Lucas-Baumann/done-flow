@@ -1,26 +1,26 @@
-import { StyleSheet } from 'react-native';
-import { sharedStyles } from '../../styles/shared';
+import { StyleSheet } from "react-native";
+import { sharedStyles } from "../../styles/shared";
 
 const localStyles = StyleSheet.create({
   title: {
     padding: 10,
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 
   Text: {
-    textAlign: 'center',
-    color: '#000000',
+    textAlign: "center",
+    color: "#000000",
     fontSize: 15,
   },
 
   Modal: {
     margin: 20,
-    backgroundColor: '#87caeb',
+    backgroundColor: "#87caeb",
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -29,39 +29,32 @@ const localStyles = StyleSheet.create({
   },
 
   ModalButtonContainer: {
-    backgroundColor: '#87caeb',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: "#87caeb",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   modaladdButton: {
     borderRadius: 7,
-    backgroundColor: '#3e54cf',
+    backgroundColor: "#3e54cf",
     width: 100,
     height: 30,
-    justifyContent: 'center',
-  },
-
-  addContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: '#87caeb',
-    columnGap: 8,
+    justifyContent: "center",
   },
 
   category: {
-    backgroundColor: '#00d9ff',
+    backgroundColor: "#00d9ff",
     borderRadius: 10,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 3,
     marginTop: 11,
   },
 
   categoryText: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

@@ -114,6 +114,7 @@ export const sharedStyles = StyleSheet.create({
   inputContainer: {
     gap: 4,
     backgroundColor: colors.primary,
+    padding: 5,
   },
 
   dropdown: {
@@ -138,7 +139,6 @@ export const sharedStyles = StyleSheet.create({
 
   Flatlist: {
     padding: 20,
-    borderRadius: 10,
     backgroundColor: "#87caeb",
   },
 

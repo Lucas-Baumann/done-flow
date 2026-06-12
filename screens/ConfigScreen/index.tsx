@@ -20,6 +20,7 @@ import {
   permanentDeleteCategory,
   restoreCategory as restoreCategoryDB,
   initDatabase,
+  getTask,
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenTemplate from "../TemplateScreen";

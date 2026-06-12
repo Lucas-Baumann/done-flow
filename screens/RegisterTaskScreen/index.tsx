@@ -26,7 +26,6 @@ import {
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenTemplate from "../TemplateScreen";
-import { sharedStyles } from "../../styles/shared";
 
 type ItemComponentProps = {
   item: Task;
