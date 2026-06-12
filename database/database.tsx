@@ -111,7 +111,7 @@ export type Categories = {
   id: number;
   addDate: string;
   editDate: string | null;
-  deleteTDate: string | null;
+  deleteDate: string | null;
   color: string | null;
 };
 

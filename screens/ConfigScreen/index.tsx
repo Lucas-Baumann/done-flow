@@ -92,7 +92,6 @@ function ItemComponent({
               borderRadius: 10,
             }}
           >
-            {" "}
           </View>
         </View>
       </View>
@@ -143,7 +142,6 @@ function ItemDeleteComponent({
               borderRadius: 10,
             }}
           >
-            {" "}
           </View>
         </View>
       </View>

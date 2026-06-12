@@ -23,6 +23,9 @@ import {
   editTask as editTaskDB,
   Categories,
   getCategories,
+  permanentDeleteTask,
+  restoreTask as restoreTaskDB,
+  getDeletedTask,
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenTemplate from "../TemplateScreen";
@@ -32,6 +35,12 @@ type ItemComponentProps = {
   deleteTask: (id: number) => void;
   completeTask: (id: number, completed: boolean) => void;
   setSelectedItemId: React.Dispatch<React.SetStateAction<number | undefined>>;
+};
+
+type ItemDeleteComponentProps = {
+  item: Task;
+  permanentDeleteTask: (id: number) => void;
+  restoreTaskDB: (id: number) => void;
 };
 
 function ItemComponent({
@@ -113,17 +122,61 @@ function ItemComponent({
   );
 }
 
+function ItemDeleteComponent({
+  item,
+  permanentDeleteTask,
+  restoreTaskDB,
+}: ItemDeleteComponentProps) {
+  const deleteDate = item.deletedTask
+    ? new Date(item.deletedTask).toLocaleString("pt-BR", {})
+    : null;
+  return (
+    <SafeAreaView>
+      <View style={styles.FlatListContainer}>
+        <View style={styles.FlatListRowContainer}>
+          <View style={styles.FlatListTextContainer}>
+            <Text style={styles.TextFlatList}>{item.text}</Text>
+            <Text>Deletado em {deleteDate}</Text>
+          </View>
+          <View style={styles.FlatListButtonContainer}>
+            <Pressable
+              style={styles.DeleteButton}
+              onPress={() => permanentDeleteTask(item.id)}
+            >
+              <Ionicons
+                name="ban"
+                size={18}
+                color="#ffffff"
+                style={{ alignSelf: "center" }}
+              />
+            </Pressable>
+            <Pressable
+              style={styles.EditButton}
+              onPress={() => restoreTaskDB(item.id)}
+            >
+              <Ionicons
+                name="refresh"
+                size={18}
+                color="#ffffff"
+                style={{ alignSelf: "center" }}
+              />
+            </Pressable>
+          </View>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
 export default function TabTwoScreen() {
   const [items, setItems] = useState<Task[]>([]);
+  const [deleteItems, setDeleteItems] = useState<Task[]>([]);
   const [data, setData] = useState<Categories[]>([]);
-
   const filteredItems = useMemo(
     () => items.filter((item) => !item.deletedTask),
     [items],
   );
-
   const [selectedItemId, setSelectedItemId] = useState<number>();
-
   const selectedItem = useMemo(
     () =>
       selectedItemId != null
@@ -132,7 +185,6 @@ export default function TabTwoScreen() {
     [selectedItemId],
   );
   const modalVisible = useMemo(() => selectedItem != null, [selectedItem]);
-
   const [text, setText] = useState("");
   const [textedit, setTextEdit] = useState("");
   const [Value, setValue] = useState<number | null>(null);
@@ -147,6 +199,12 @@ export default function TabTwoScreen() {
   useFocusEffect(
     useCallback(() => {
       getCategories().then((tasks) => setData(tasks));
+    }, []),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      getDeletedTask().then((tasks) => setDeleteItems(tasks));
     }, []),
   );
 
@@ -168,6 +226,8 @@ export default function TabTwoScreen() {
     await deleteTaskDB(id);
     const Tasks = await getTask();
     setItems(Tasks);
+    const task = await getDeletedTask();
+    setDeleteItems(task);
   }, []);
 
   //Tarefa completa
@@ -187,6 +247,22 @@ export default function TabTwoScreen() {
     },
     [textedit, ValueEdit],
   );
+
+  //Deletar tarefa permanente
+  const permanentDelete = useCallback(async (id: number) => {
+    await permanentDeleteTask(id);
+    const Task = await getDeletedTask();
+    setDeleteItems(Task);
+  }, []);
+
+  //Restaurar tarefa deletada
+  const restoreTask = useCallback(async (id: number) => {
+    restoreTaskDB(id);
+    const Task = await getDeletedTask();
+    setDeleteItems(Task);
+    const task = await getTask();
+    setItems(task);
+  }, []);
 
   return (
     <ScreenTemplate
@@ -315,12 +391,28 @@ export default function TabTwoScreen() {
             </View>
           ),
         },
-        // {
-        //   label: "Historico",
-        //   content: (
-
-        //   ),
-        // }
+        {
+          label: "Historico",
+          content: (
+            <View>
+              <Text style={styles.TextTabs}>Historico de tarefas</Text>
+              <FlatList
+                style={styles.Flatlist}
+                contentContainerStyle={{ gap: 6 }}
+                data={deleteItems}
+                extraData={deleteItems}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <ItemDeleteComponent
+                    item={item}
+                    permanentDeleteTask={permanentDelete}
+                    restoreTaskDB={restoreTask}
+                  />
+                )}
+              />
+            </View>
+          ),
+        },
       ]}
     />
   );
