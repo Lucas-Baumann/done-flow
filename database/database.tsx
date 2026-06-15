@@ -11,6 +11,8 @@ export type Task = {
   idcategory: number | null;
   categoryName: string | null;
   categoryColor: string | null;
+  startDate: string | null;
+  endDate: string | null;
 };
 
 const dbtasks = SQLite.openDatabaseSync("tasks.db");
@@ -25,22 +27,26 @@ export async function creatTableTarefas() {
         editDate TEXT NULL,
         deletedTask TEXT NULL,
         restoreDate TEXT NULL,
-        idcategory INTEGER NULL);
+        idcategory INTEGER NULL,
+        startDate TEXT NULL,
+        endDate TEXT NULL);
     `);
 }
 
 
 
-export async function addTask(text: string, Value: number | null) {
+export async function addTask(text: string, Value: number | null, startDate: string | null, endDate: string | null) {
   await dbtasks.runAsync(
-    "INSERT INTO tarefas (text, addDate, idcategory) VALUES (?,?,?)",
-    [text, new Date().toISOString(), Value],
+    "INSERT INTO tarefas (text, addDate, idcategory, startDate, endDate) VALUES (?,?,?,?,?)",
+    [text, new Date().toISOString(), Value, startDate, endDate],
   );
 }
 
 export async function getTask(): Promise<Task[]> {
+  const today = new Date().toISOString().split('T')[0];
   const tasks = await dbtasks.getAllAsync<any>(
-    "SELECT * FROM tarefas WHERE deletedTask IS NULL",
+    "SELECT * FROM tarefas WHERE deletedTask IS NULL AND (startDate IS NULL OR (startDate <= ? AND endDate >= ?))",
+    [today,today]
   );
   const categories = await dbcategories.getAllAsync<any>(
     "SELECT * FROM categorias WHERE deleteDate IS NULL",
@@ -74,12 +80,14 @@ export function completeTask(id: number, completed: boolean) {
   );
 }
 
-export function editTask(id: number, text: string, ValueEdit: number | null) {
+export function editTask(id: number, text: string, ValueEdit: number | null, startDate: string | null, endDate: string | null) {
   dbtasks.runSync(
-    "UPDATE tarefas SET text = ?, editDate = ?, idcategory = ? WHERE id = ?",
+    "UPDATE tarefas SET text = ?, editDate = ?, idcategory = ?, startDate = ?, endDate = ? WHERE id = ?",
     text,
     new Date().toISOString(),
     ValueEdit,
+    startDate,
+    endDate,
     id,
   );
 }
@@ -185,6 +193,9 @@ export async function initDatabase() {
     try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN restoreDate TEXT NULL'); } catch (_) {}
     try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN deletedTask TEXT NULL'); } catch (_) {}
     try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN idcategory INTEGER NULL'); } catch (_) {}
+    try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN startDate TEXT NULL'); } catch (_) {}
+    try { await dbtasks.execAsync('ALTER TABLE tarefas ADD COLUMN endDate TEXT NULL'); } catch (_) {}
+
     await createTableCategorias();
     try { await dbcategories.execAsync('ALTER TABLE categorias ADD COLUMN color TEXT NULL'); } catch (_) {}
     try { await dbcategories.execAsync('ALTER TABLE categorias ADD COLUMN restoreDate TEXT NULL'); } catch (_) {}
