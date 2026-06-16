@@ -156,4 +156,19 @@ export const sharedStyles = StyleSheet.create({
     alignItems: "center",
     width: 130,
   },
+  DateContainer: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    height: 40,
+    borderRadius: 15,
+    backgroundColor: colors.primary,
+  },
+
+  DateButton: {
+    width: 140,
+    height: 40,
+    justifyContent: "center",
+    backgroundColor: 'white',
+    borderRadius: 5
+  },
 });

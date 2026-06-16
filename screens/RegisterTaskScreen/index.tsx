@@ -29,6 +29,7 @@ import {
 } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenTemplate from "../TemplateScreen";
+import { Calendar } from "react-native-calendars";
 
 type ItemComponentProps = {
   item: Task;
@@ -189,6 +190,13 @@ export default function TabTwoScreen() {
   const [textedit, setTextEdit] = useState("");
   const [Value, setValue] = useState<number | null>(null);
   const [ValueEdit, setValueEdit] = useState<number | null>(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+  const [startDateEdit, setStartDateEdit] = useState<string | null>(null);
+  const [endDateEdit, setEndDateEdit] = useState<string | null>(null);
+  const [calendarVisible, setCalendarVisible] = useState<
+    "none" | "startAdd" | "endAdd" | "startEdit" | "endEdit"
+  >("none");
 
   useFocusEffect(
     useCallback(() => {
@@ -208,14 +216,23 @@ export default function TabTwoScreen() {
     }, []),
   );
 
+  useEffect(() => {
+    if (selectedItem) {
+      setStartDateEdit(selectedItem.startDate);
+      setEndDateEdit(selectedItem.endDate);
+    }
+  }, [selectedItem]);
+
   //Adicionar tarefa
   async function addTask() {
     if (text !== "") {
-      await addTaskDB(text, Value);
+      await addTaskDB(text, Value, startDate, endDate);
       const tasks = await getTask();
       setItems(tasks);
       setText("");
       setValue(null);
+      setStartDate(null);
+      setEndDate(null);
     } else {
       Alert.alert("Digite uma tarefa");
     }
@@ -239,8 +256,14 @@ export default function TabTwoScreen() {
 
   //Editar tarefa
   const editTask = useCallback(
-    async (id: number, text: string, ValueEdit: number | null) => {
-      await editTaskDB(id, text, ValueEdit);
+    async (
+      id: number,
+      text: string,
+      ValueEdit: number | null,
+      startDateEdit: string | null,
+      endDateEdit: string | null,
+    ) => {
+      await editTaskDB(id, text, ValueEdit, startDateEdit, endDateEdit);
       const Tasks = await getTask();
       setItems(Tasks);
       setValueEdit(null);
@@ -297,6 +320,29 @@ export default function TabTwoScreen() {
                       <Ionicons color="black" name="caret-down" size={20} />
                     )}
                   ></Dropdown>
+                  <View style={styles.DateContainer}>
+                    <Pressable
+                      onPress={() => setCalendarVisible("startAdd")}
+                      style={styles.DateButton}
+                    >
+                      <Text style={styles.Text}>
+                        {startDate
+                          ? `início: ${startDate}`
+                          : " Selecionar data início"}
+                      </Text>
+                    </Pressable>
+
+                    <Pressable
+                      onPress={() => setCalendarVisible("endAdd")}
+                      style={styles.DateButton}
+                    >
+                      <Text style={styles.Text}>
+                        {endDate
+                          ? `Fim: ${endDate}`
+                          : " Selecionar data \n fim"}
+                      </Text>
+                    </Pressable>
+                  </View>
                 </View>
 
                 <Pressable style={styles.AddButton} onPress={addTask}>
@@ -308,7 +354,6 @@ export default function TabTwoScreen() {
                   />
                 </Pressable>
               </View>
-
               <FlatList
                 style={styles.Flatlist}
                 contentContainerStyle={{ gap: 6 }}
@@ -324,7 +369,6 @@ export default function TabTwoScreen() {
                   />
                 )}
               />
-
               <Modal
                 animationType="fade"
                 transparent={true}
@@ -364,12 +408,43 @@ export default function TabTwoScreen() {
                             )}
                           ></Dropdown>
                         </View>
+                        <View>
+                          <Pressable
+                            onPress={() => setCalendarVisible("startEdit")}
+                            style={styles.DateButton}
+                          >
+                            <Text style={styles.Text}>
+                              {startDateEdit
+                                ? `início: ${startDateEdit}`
+                                : " Selecionar data início"}
+                            </Text>
+                          </Pressable>
+
+                          <Pressable
+                            onPress={() => setCalendarVisible("endEdit")}
+                            style={styles.DateButton}
+                          >
+                            <Text style={styles.Text}>
+                              {endDateEdit
+                                ? `Fim: ${endDateEdit}`
+                                : " Selecionar data \n fim"}
+                            </Text>
+                          </Pressable>
+                        </View>
                         <View style={styles.ModalButtonContainer}>
                           <Pressable
                             style={styles.modaladdButton}
                             onPress={() => {
-                              editTask(selectedItem.id, textedit, ValueEdit);
-                              setSelectedItemId(undefined);
+                              if (selectedItem) {
+                                editTask(
+                                  selectedItem.id,
+                                  textedit,
+                                  ValueEdit,
+                                  startDateEdit,
+                                  endDateEdit,
+                                );
+                                setSelectedItemId(undefined);
+                              }
                             }}
                           >
                             <Text style={styles.TextButton}> Editar </Text>
@@ -386,6 +461,34 @@ export default function TabTwoScreen() {
                     </View>
                   </KeyboardAvoidingView>
                 </SafeAreaView>
+              </Modal>
+              <Modal
+                visible={calendarVisible !== "none"}
+                transparent
+                animationType="fade"
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    backgroundColor: "rgba(0,0,0,0.5)",
+                  }}
+                >
+                  <Calendar
+                    enableSwipeMonths={true}
+                    onDayPress={(day) => {
+                      if (calendarVisible === "startAdd")
+                        setStartDate(day.dateString);
+                      if (calendarVisible === "endAdd")
+                        setEndDate(day.dateString);
+                      if (calendarVisible === "startEdit")
+                        setStartDateEdit(day.dateString);
+                      if (calendarVisible === "endEdit")
+                        setEndDateEdit(day.dateString);
+                      setCalendarVisible("none");
+                    }}
+                  />
+                </View>
               </Modal>
             </View>
           ),

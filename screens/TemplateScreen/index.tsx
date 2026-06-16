@@ -9,6 +9,7 @@ type Tab = {
 };
 
 type Props = {
+  title?: string;
   tabs: Tab[];
 };
 
@@ -36,7 +37,7 @@ export default function ScreenTemplate({ tabs }: Props) {
                     marginHorizontal: 4,
                     borderRadius: 8,
                     backgroundColor:
-                      activeTab === index ? "#3e54cf" : "#3e54cf",
+                      activeTab === index ? "#3149d1" : "#3e54cf78",
                   }}
                 >
                   <Text style={{ color: "#fff", }}>{tab.label}</Text>
