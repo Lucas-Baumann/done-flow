@@ -64,6 +64,26 @@ export async function getTask(): Promise<Task[]> {
   }));
 }
 
+export async function getTaskCalendar(): Promise<Task[]> {
+  const tasks = await dbtasks.getAllAsync<any>(
+    "SELECT * FROM tarefas WHERE deletedTask is NULL AND startDate IS NOT NULL ADN endDate IS NOT NULL",
+  );
+
+  const categories = await dbcategories.getAllAsync<any>(
+    "SELECT * FROM categorias WHERE deleteDate IS NULL",
+  );
+
+  const categoryMap = new Map(categories.map((c: any) => [c.id, c.text]));
+  const colorMap = new Map(categories.map((c: any) => [c.id, c.color]));
+
+  return tasks.map((task: any) => ({
+    ...task,
+    completed: task.completed === 1,
+    categoryColor: task.idcategory ? colorMap.get(task.idcategory) ?? null : null,
+    categoryName: task.idcategory ? categoryMap.get(task.idcategory) ?? null : null,
+  }));
+}
+
 export function deleteTask(id: number) {
   dbtasks.runSync(
     "UPDATE tarefas SET deletedTask = ? WHERE id = ?",
