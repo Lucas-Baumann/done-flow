@@ -30,6 +30,8 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenTemplate from "../TemplateScreen";
 import { Calendar } from "react-native-calendars";
+import CalendarHeader from "react-native-calendars/src/calendar/header";
+import Colors from "../../constants/Colors";
 
 type ItemComponentProps = {
   item: Task;
@@ -467,14 +469,24 @@ export default function TabTwoScreen() {
                 transparent
                 animationType="fade"
               >
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    backgroundColor: "rgba(0,0,0,0.5)",
-                  }}
-                >
+                <View style={styles.ModalView}>
                   <Calendar
+                    style={styles.CalendarModal}
+                    theme={{
+                      calendarBackground: "#ffffff",
+                      todayTextColor: "#1100ff",
+                      arrowColor: "#1100ff",
+                      monthTextColor: "#1100ff",
+                      textDayFontFamily: "monospace",
+                      textMonthFontFamily: "monospace",
+                      textDayHeaderFontFamily: "monospace",
+                      textMonthFontWeight: "bold",
+                      textDayFontWeight: "300",
+                      textDayHeaderFontWeight: "300",
+                      textDayFontSize: 25,
+                      textMonthFontSize: 25,
+                      textDayHeaderFontSize: 15,
+                    }}
                     enableSwipeMonths={true}
                     onDayPress={(day) => {
                       if (calendarVisible === "startAdd")

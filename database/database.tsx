@@ -66,7 +66,7 @@ export async function getTask(): Promise<Task[]> {
 
 export async function getTaskCalendar(): Promise<Task[]> {
   const tasks = await dbtasks.getAllAsync<any>(
-    "SELECT * FROM tarefas WHERE deletedTask is NULL AND startDate IS NOT NULL ADN endDate IS NOT NULL",
+    "SELECT * FROM tarefas WHERE deletedTask is NULL AND startDate IS NOT NULL AND endDate IS NOT NULL",
   );
 
   const categories = await dbcategories.getAllAsync<any>(

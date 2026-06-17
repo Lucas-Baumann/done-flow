@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Agenda } from "react-native-calendars";
 
 export const colors = {
   primary: "#87caeb",
@@ -171,4 +172,18 @@ export const sharedStyles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 5
   },
+
+  CalendarModal:{
+    width: 450,
+    height: 380,
+    borderRadius: 10,
+  },
+
+  AgendaContainer: {
+    padding: 12, 
+    marginHorizontal: 16,
+    marginVertical: 4, 
+    borderRadius: 8, 
+    backgroundColor: "#fff" 
+  }
 });
