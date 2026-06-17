@@ -96,7 +96,8 @@ export const sharedStyles = StyleSheet.create({
 
   ModalButtonContainer: {
     flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#fff"
   },
 
   CheckboxContainer: {
@@ -169,21 +170,21 @@ export const sharedStyles = StyleSheet.create({
     width: 140,
     height: 40,
     justifyContent: "center",
-    backgroundColor: 'white',
-    borderRadius: 5
+    backgroundColor: "white",
+    borderRadius: 5,
   },
 
-  CalendarModal:{
+  CalendarModal: {
     width: 450,
     height: 380,
     borderRadius: 10,
   },
 
   AgendaContainer: {
-    padding: 12, 
+    padding: 12,
     marginHorizontal: 16,
-    marginVertical: 4, 
-    borderRadius: 8, 
-    backgroundColor: "#fff" 
-  }
+    marginVertical: 4,
+    borderRadius: 8,
+    backgroundColor: "#fff",
+  },
 });

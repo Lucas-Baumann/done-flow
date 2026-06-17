@@ -4,10 +4,19 @@ import {
   CalendarProvider,
   ExpandableCalendar,
   AgendaList,
+  LocaleConfig,
 } from "react-native-calendars";
 import { getTaskCalendar, Task } from "../../database/database";
 import { useFocusEffect } from "@react-navigation/native";
-import { styles } from "../RegisterTaskScreen/style";
+
+LocaleConfig.locales['pt-br'] = {
+  monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+  monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+  dayNames: ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'],
+  dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+  today: 'Hoje',
+};
+LocaleConfig.defaultLocale = 'pt-br';
 
 const TODAY = new Date().toISOString().split("T")[0];
 
@@ -79,8 +88,8 @@ export default function TabOneScreen() {
       <AgendaList
         sections={agendaItems}
         renderItem={({ item }: { item: Task }) => (
-          <View style={styles.AgendaContainer}>
-            <Text>{item.text}</Text>
+          <View style={{ padding: 12, marginHorizontal: 16, marginVertical: 4, borderRadius: 8, backgroundColor: "#fff" }}>
+            <Text style={{ fontWeight: "bold" }}>{item.text}</Text>
             {item.categoryName && (
               <Text style={{ color: item.categoryColor ?? "#666", marginTop: 4 }}>
                 {item.categoryName}
@@ -88,6 +97,19 @@ export default function TabOneScreen() {
             )}
           </View>
         )}
+        renderSectionHeader={(dateString) => {
+          const date = new Date(dateString + 'T12:00:00');
+          const formatted = date.toLocaleDateString('pt-BR', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+          });
+          return (
+            <View style={{ padding: 8, backgroundColor: '#87caeb' }}>
+              <Text style={{ fontWeight: 'bold', textTransform: 'capitalize' }}>{formatted}</Text>
+            </View>
+          );
+        }}
       />
     </CalendarProvider>
   );

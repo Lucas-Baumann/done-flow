@@ -91,7 +91,7 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
           title: "Lista",
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="list-ul" color={color} />
+            <TabBarIcon name="calendar" color={color} />
           ),
         })}
       />

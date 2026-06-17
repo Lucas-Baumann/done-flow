@@ -30,8 +30,9 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import ScreenTemplate from "../TemplateScreen";
 import { Calendar } from "react-native-calendars";
-import CalendarHeader from "react-native-calendars/src/calendar/header";
-import Colors from "../../constants/Colors";
+
+const formatDatePtBR = (dateStr: string) =>
+  new Date(dateStr + 'T12:00:00').toLocaleDateString('pt-BR');
 
 type ItemComponentProps = {
   item: Task;
@@ -329,7 +330,7 @@ export default function TabTwoScreen() {
                     >
                       <Text style={styles.Text}>
                         {startDate
-                          ? `início: ${startDate}`
+                          ? `início: ${formatDatePtBR(startDate)}`
                           : " Selecionar data início"}
                       </Text>
                     </Pressable>
@@ -340,7 +341,7 @@ export default function TabTwoScreen() {
                     >
                       <Text style={styles.Text}>
                         {endDate
-                          ? `Fim: ${endDate}`
+                          ? `Fim: ${formatDatePtBR(endDate)}`
                           : " Selecionar data \n fim"}
                       </Text>
                     </Pressable>
@@ -417,7 +418,7 @@ export default function TabTwoScreen() {
                           >
                             <Text style={styles.Text}>
                               {startDateEdit
-                                ? `início: ${startDateEdit}`
+                                ? `início: ${formatDatePtBR(startDateEdit)}`
                                 : " Selecionar data início"}
                             </Text>
                           </Pressable>
@@ -428,7 +429,7 @@ export default function TabTwoScreen() {
                           >
                             <Text style={styles.Text}>
                               {endDateEdit
-                                ? `Fim: ${endDateEdit}`
+                                ? `Fim: ${formatDatePtBR(endDateEdit)}`
                                 : " Selecionar data \n fim"}
                             </Text>
                           </Pressable>
