@@ -84,6 +84,7 @@ export default function TabOneScreen() {
       <ExpandableCalendar
         markingType="multi-period"
         markedDates={markedDates}
+        calendarStyle={{ paddingBottom: 40 }}
       />
       <AgendaList
         sections={agendaItems}

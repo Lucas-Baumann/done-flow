@@ -136,7 +136,7 @@ export const sharedStyles = StyleSheet.create({
   },
 
   Flatlist: {
-    padding: 20,
+    paddingHorizontal: 20,
     backgroundColor: "#87caeb",
   },
 

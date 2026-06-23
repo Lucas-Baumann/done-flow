@@ -16,7 +16,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import {
   initDatabase,
   addTask as addTaskDB,
-  getTask,
+  getAllActiveTasks,
   Task,
   deleteTask as deleteTaskDB,
   completeTask as completeTaskDB,
@@ -62,7 +62,7 @@ function ItemComponent({
     : null;
 
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.FlatListContainer}>
         <View style={styles.FlatListRowContainer}>
           <View style={styles.FlatListTextContainer}>
@@ -122,7 +122,7 @@ function ItemComponent({
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -135,7 +135,7 @@ function ItemDeleteComponent({
     ? new Date(item.deletedTask).toLocaleString("pt-BR", {})
     : null;
   return (
-    <SafeAreaView>
+    <View>
       <View style={styles.FlatListContainer}>
         <View style={styles.FlatListRowContainer}>
           <View style={styles.FlatListTextContainer}>
@@ -168,7 +168,7 @@ function ItemDeleteComponent({
           </View>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -203,7 +203,7 @@ export default function TabTwoScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      initDatabase().then(() => getTask().then((tasks) => setItems(tasks)));
+      initDatabase().then(() => getAllActiveTasks().then((tasks) => setItems(tasks)));
     }, []),
   );
 
@@ -230,7 +230,7 @@ export default function TabTwoScreen() {
   async function addTask() {
     if (text !== "") {
       await addTaskDB(text, Value, startDate, endDate);
-      const tasks = await getTask();
+      const tasks = await getAllActiveTasks();
       setItems(tasks);
       setText("");
       setValue(null);
@@ -244,7 +244,7 @@ export default function TabTwoScreen() {
   //Deletar tarefa
   const deleteTask = useCallback(async (id: number) => {
     await deleteTaskDB(id);
-    const Tasks = await getTask();
+    const Tasks = await getAllActiveTasks();
     setItems(Tasks);
     const task = await getDeletedTask();
     setDeleteItems(task);
@@ -253,7 +253,7 @@ export default function TabTwoScreen() {
   //Tarefa completa
   const completeTask = useCallback(async (id: number, completed: boolean) => {
     completeTaskDB(id, completed);
-    const Tasks = await getTask();
+    const Tasks = await getAllActiveTasks();
     setItems(Tasks);
   }, []);
 
@@ -267,7 +267,7 @@ export default function TabTwoScreen() {
       endDateEdit: string | null,
     ) => {
       await editTaskDB(id, text, ValueEdit, startDateEdit, endDateEdit);
-      const Tasks = await getTask();
+      const Tasks = await getAllActiveTasks();
       setItems(Tasks);
       setValueEdit(null);
     },
@@ -286,7 +286,7 @@ export default function TabTwoScreen() {
     restoreTaskDB(id);
     const Task = await getDeletedTask();
     setDeleteItems(Task);
-    const task = await getTask();
+    const task = await getAllActiveTasks();
     setItems(task);
   }, []);
 
@@ -296,7 +296,7 @@ export default function TabTwoScreen() {
         {
           label: "Tarefas",
           content: (
-            <View>
+            <View style={{ flex: 1, backgroundColor: "#87caeb" }}>
               <Text style={styles.TextTabs}>Adicione sua tarefa</Text>
               <View style={styles.addContainer}>
                 <View style={styles.inputContainer}>
