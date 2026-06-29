@@ -234,71 +234,70 @@ export default function ConfigTab() {
         {
           label: "Categorias",
           content: (
-            <View>
+            <View style={{backgroundColor: "#87caeb"}}>
               <Text style={styles.TextTabs}>Adicione categorias</Text>
-              <View style={styles.addContainer}>
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    style={styles.TextInput}
-                    value={text}
-                    onChangeText={setText}
-                    placeholder="Nome da categoria..."
-                  />
-                </View>
-                <Pressable
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 8,
-                    backgroundColor: selectedColor,
-                    borderWidth: 1,
-                    borderColor: "#ccc",
-                  }}
-                  onPress={() => setColorPickerVisible(!colorPickerVisible)}
-                />
-                {colorPickerVisible && (
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                      gap: 8,
-                      padding: 8,
-                      backgroundColor: "#fff",
-                      borderRadius: 8,
-                      position: "absolute",
-                      top: 50,
-                      zIndex: 10,
-                    }}
-                  >
-                    {PRESET_COLORS.map((c) => (
-                      <Pressable
-                        key={c}
-                        style={{
-                          width: 30,
-                          height: 30,
-                          borderRadius: 15,
-                          backgroundColor: c,
-                          borderWidth: selectedColor === c ? 3 : 0,
-                          borderColor: "#000",
-                        }}
-                        onPress={() => {
-                          setSelectedColor(c);
-                          setColorPickerVisible(false);
-                        }}
-                      />
-                    ))}
+                <View style={styles.addContainer }>
+                  <View style={styles.inputContainer }>
+                    <TextInput
+                      style={styles.TextInput}
+                      value={text}
+                      onChangeText={setText}
+                      placeholder="Nome da categoria..."
+                    />
                   </View>
-                )}
-                <Pressable style={styles.AddButton} onPress={addCategories}>
-                  <Ionicons
-                    name="add"
-                    size={60}
-                    color="#ffffff"
-                    style={{ alignSelf: "center" }}
+                  <Pressable
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 8,
+                      backgroundColor: selectedColor,
+                      borderWidth: 1,
+                      borderColor: "#ccc",
+                    }}
+                    onPress={() => setColorPickerVisible(!colorPickerVisible)}
                   />
-                </Pressable>
-              </View>
-
+                  {colorPickerVisible && (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                        gap: 8,
+                        padding: 8,
+                        backgroundColor: "#fff",
+                        borderRadius: 8,
+                        position: "absolute",
+                        top: 50,
+                        zIndex: 10,
+                      }}
+                    >
+                      {PRESET_COLORS.map((c) => (
+                        <Pressable
+                          key={c}
+                          style={{
+                            width: 30,
+                            height: 30,
+                            borderRadius: 15,
+                            backgroundColor: c,
+                            borderWidth: selectedColor === c ? 3 : 0,
+                            borderColor: "#000",
+                          }}
+                          onPress={() => {
+                            setSelectedColor(c);
+                            setColorPickerVisible(false);
+                          }}
+                        />
+                      ))}
+                    </View>
+                  )}
+                  <Pressable style={styles.AddButton} onPress={addCategories}>
+                    <Ionicons
+                      name="add"
+                      size={60}
+                      color="#ffffff"
+                      style={{ alignSelf: "center" }}
+                    />
+                  </Pressable>
+                </View>
               <FlatList
                 style={styles.Flatlist}
                 contentContainerStyle={{ gap: 6 }}

@@ -50,7 +50,7 @@ export const sharedStyles = StyleSheet.create({
 
   TextInput: {
     backgroundColor: colors.white,
-    width: 300,
+    width: '100%',
     borderRadius: 15,
   },
 
@@ -117,6 +117,7 @@ export const sharedStyles = StyleSheet.create({
     gap: 4,
     backgroundColor: colors.primary,
     padding: 5,
+    width: '60%'
   },
 
   dropdown: {
@@ -145,6 +146,7 @@ export const sharedStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#87caeb",
+    width: '100%',
     columnGap: 8,
   },
 
@@ -175,8 +177,8 @@ export const sharedStyles = StyleSheet.create({
   },
 
   CalendarModal: {
-    width: 450,
-    height: 380,
+    width: '100%',
+    height: '66%',
     borderRadius: 10,
   },
 
