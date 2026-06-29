@@ -378,11 +378,11 @@ export default function TabTwoScreen() {
                 visible={modalVisible}
                 onRequestClose={() => setSelectedItemId(undefined)}
               >
-                <SafeAreaView style={{ flex: 1 }}>
+                <SafeAreaView style={{ flex: 1}}>
                   <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
                     <View style={styles.ModalView}>
                       <View style={styles.Modal}>
-                        <View style={styles.inputContainer}>
+                        <View style={styles.ModalinputContainer}>
                           <Text style={styles.Text}> Edite sua tarefa</Text>
                           <TextInput
                             style={styles.TextInput}
@@ -411,7 +411,7 @@ export default function TabTwoScreen() {
                             )}
                           ></Dropdown>
                         </View>
-                        <View>
+                        <View style={styles.DateContainer}>
                           <Pressable
                             onPress={() => setCalendarVisible("startEdit")}
                             style={styles.DateButton}

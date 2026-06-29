@@ -14,20 +14,6 @@ const localStyles = StyleSheet.create({
     fontSize: 15,
   },
 
-  Modal: {
-    margin: 20,
-    backgroundColor: "#87caeb",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    gap: 30,
-  },
-
   ModalButtonContainer: {
     backgroundColor: "#87caeb",
     flexDirection: "row",
